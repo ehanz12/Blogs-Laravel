@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Blog extends Model
 {
@@ -33,6 +34,17 @@ class Blog extends Model
         return $this->belongsTo(Category::class);
     }
 
-    
+    public function scopeFilter(Builder $query, array $filters) : void
+    {
+        $query->when($filters['Search'] ?? false, 
+        fn($query,  $Search)=>
+             $query->where('title', 'like', '%' . $Search . '%')
+            );
+
+        $query->when($filters['Category'] ?? false, 
+        fn($query,  $Category)=>
+             $query->whereHas('cateogry', fn($query) => $query->where('slug', $Category))
+            );
+    }
 
 }

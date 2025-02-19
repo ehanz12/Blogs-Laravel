@@ -13,13 +13,8 @@ Route::get('/', function () {
 }); 
 
 Route::get('/Blogs', function () {
-    $blogs = Blog::latest();
-
-    if(request('Search')){
-        $blogs->where('title', 'like', '%' . request('Search') . '%');
-    }
-
-    return view('Blogs', ["title" => 'Blog', 'blogs' => $blogs->get()]);
+    
+    return view('Blogs', ["title" => 'Blog', 'blogs' => Blog::Filter(request(['Search', 'Category']))->latest()->get()]);
 }); 
 
 Route::get('/blog/{blog:slug}', function (Blog  $blog){
@@ -34,7 +29,6 @@ Route::get('/authors/{user:username}', function (User $user){
 
 Route::get('/categories/{category:slug}', function (Category $category){
     // $blogs = $category->blogs->load('category', 'author');
-
     return view('blogs', ["title" => count($category->blogs) . ' Articles In :  '. $category->name , 'blogs' => $category->blogs]);
 });
 
