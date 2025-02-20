@@ -14,8 +14,10 @@ Route::get('/', function () {
 
 Route::get('/Blogs', function () {
     
-    return view('Blogs', ["title" => 'Blog', 'blogs' => Blog::Filter(request(['Search', 'Category']))->latest()->get()]);
+    return view('Blogs', ["title" => 'Blog', 'blogs' => Blog::filter(request(['Search', 'Category', 'Author']))->latest()->paginate(6)]);
 }); 
+
+
 
 Route::get('/blog/{blog:slug}', function (Blog  $blog){
     return view('blog', ["title" => 'single blog', 'blog' => $blog]);

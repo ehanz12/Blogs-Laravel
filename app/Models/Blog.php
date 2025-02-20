@@ -41,10 +41,15 @@ class Blog extends Model
              $query->where('title', 'like', '%' . $Search . '%')
             );
 
-        $query->when($filters['Category'] ?? false, 
-        fn($query,  $Category)=>
-             $query->whereHas('cateogry', fn($query) => $query->where('slug', $Category))
-            );
-    }
+            $query->when($filters['aategory'] ?? false, 
+            fn($query,  $category)=>
+                 $query->whereHas('cateogry', fn($query) => $query->where('slug', $category))
+                );
+
+                $query->when($filters['author'] ?? false, 
+                fn($query,  $author)=>
+                     $query->whereHas('author', fn($query) => $query->where('username', $author))
+                    );
+            }
 
 }
